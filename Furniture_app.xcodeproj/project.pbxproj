@@ -20,6 +20,7 @@
 		888C4E9D25DCF2B600F9B6ED /* ui.png in Resources */ = {isa = PBXBuildFile; fileRef = 888C4E9C25DCF2B600F9B6ED /* ui.png */; };
 		888C4EA225DCF30B00F9B6ED /* gif.gif in Resources */ = {isa = PBXBuildFile; fileRef = 888C4EA125DCF30B00F9B6ED /* gif.gif */; };
 		954833CC2C665D4900D77CD3 /* AboutUsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954833CB2C665D4900D77CD3 /* AboutUsView.swift */; };
+		954833D02C66689C00D77CD3 /* ProductCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954833CF2C66689C00D77CD3 /* ProductCardView.swift */; };
 		95B88F942C6645EE00B32476 /* AllProductsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B88F932C6645EE00B32476 /* AllProductsScreen.swift */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +61,7 @@
 		888C4E9C25DCF2B600F9B6ED /* ui.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ui.png; sourceTree = "<group>"; };
 		888C4EA125DCF30B00F9B6ED /* gif.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = gif.gif; sourceTree = "<group>"; };
 		954833CB2C665D4900D77CD3 /* AboutUsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUsView.swift; sourceTree = "<group>"; };
+		954833CF2C66689C00D77CD3 /* ProductCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCardView.swift; sourceTree = "<group>"; };
 		95B88F932C6645EE00B32476 /* AllProductsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllProductsScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -166,6 +168,7 @@
 				88044CAD25DACF81006C446F /* DetailScreen.swift */,
 				95B88F932C6645EE00B32476 /* AllProductsScreen.swift */,
 				954833CB2C665D4900D77CD3 /* AboutUsView.swift */,
+				954833CF2C66689C00D77CD3 /* ProductCardView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				8804739725D8C14200F9A279 /* Le-Dressing-De-Thais-Et-Timea_appApp.swift in Sources */,
 				954833CC2C665D4900D77CD3 /* AboutUsView.swift in Sources */,
 				885A598425D98409003A6F78 /* HomeScreen.swift in Sources */,
+				954833D02C66689C00D77CD3 /* ProductCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

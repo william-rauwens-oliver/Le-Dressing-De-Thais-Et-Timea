@@ -16,9 +16,6 @@ struct HomeScreen: View {
                         
                         AppBarView(isMenuOpen: $isMenuOpen) // Passer l'état du menu ici
                         
-                        TagLineView()
-                            .padding()
-                        
                         SearchAndScanView(search: $search)
                         
                         NavigationLink(destination: AllProductsScreen()) {
@@ -125,6 +122,19 @@ struct AppBarView: View {
             
             Spacer()
             
+            // Titre entre le menu et la photo de profil
+            VStack(spacing: 0) {
+                Text("Le Dressing De Thaïs")
+                    .font(.custom("PlayfairDisplay-Bold", size: 25))
+                    .foregroundColor(Color("Primary"))
+                
+                Text("Et Timéa")
+                    .font(.custom("PlayfairDisplay-Bold", size: 25))
+                    .foregroundColor(Color("Primary"))
+            }
+            
+            Spacer()
+            
             Button(action: {}) {
                 Image(uiImage: #imageLiteral(resourceName: "Profile"))
                     .resizable()
@@ -136,18 +146,6 @@ struct AppBarView: View {
     }
 }
 
-struct TagLineView: View {
-    var body: some View {
-        Text("Trouver ce qu'il vous faut ! ")
-            .font(.custom("PlayfairDisplay-Regular", size: 28))
-            .foregroundColor(Color("Primary"))
-            + Text("Furniture!")
-            .font(.custom("PlayfairDisplay-Bold", size: 28))
-            .fontWeight(.bold)
-            .foregroundColor(Color("Primary"))
-    }
-}
-
 struct SearchAndScanView: View {
     @Binding var search: String
     var body: some View {
@@ -155,7 +153,7 @@ struct SearchAndScanView: View {
             HStack {
                 Image("Search")
                     .padding(.trailing, 8)
-                TextField("rechercher", text: $search)
+                TextField("Rechercher", text: $search)
             }
             .padding(.all, 20)
             .background(Color.white)
