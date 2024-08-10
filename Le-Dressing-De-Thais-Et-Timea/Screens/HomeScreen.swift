@@ -3,7 +3,8 @@ import SwiftUI
 struct HomeScreen: View {
     @State private var search: String = ""
     @State private var selectedIndex: Int = 1
-    @State private var isMenuOpen: Bool = false // Variable d'état pour le menu
+    @State private var isMenuOpen: Bool = false
+    @State private var cartItemCount: Int = 3
     
     var body: some View {
         NavigationView {
@@ -14,19 +15,19 @@ struct HomeScreen: View {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading) {
                         
-                        AppBarView(isMenuOpen: $isMenuOpen) // Passer l'état du menu ici
+                        AppBarView(isMenuOpen: $isMenuOpen, cartItemCount: cartItemCount)
                         
                         SearchAndScanView(search: $search)
                         
-                        NavigationLink(destination: AllProductsScreen()) {
+                        NavigationLink(destination: AllProductsScreen().navigationBarBackButtonHidden(true)) {
                             Text("Tous nos produits")
-                                .font(.custom("PlayfairDisplay-Bold", size: 20)) // Réduction de la taille de la police
-                                .padding(.vertical, 10) // Réduction du padding vertical
-                                .padding(.horizontal, 16) // Réduction du padding horizontal
-                                .background(Color("Primary")) // Utilisation de la couleur principale
-                                .foregroundColor(.white) // Couleur du texte en blanc pour un bon contraste
-                                .cornerRadius(8.0) // Réduction du rayon des coins arrondis
-                                .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2) // Ombre légèrement réduite
+                                .font(.custom("PlayfairDisplay-Bold", size: 20))
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 16)
+                                .background(Color("Primary"))
+                                .foregroundColor(.white)
+                                .cornerRadius(8.0)
+                                .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)
                         }
                         .padding(.horizontal)
                         
@@ -38,11 +39,10 @@ struct HomeScreen: View {
                             HStack(spacing: 0) {
                                 ForEach(0 ..< 4) { i in
                                     NavigationLink(
-                                        destination: DetailScreen(),
+                                        destination: DetailScreen().navigationBarBackButtonHidden(true),
                                         label: {
                                             ProductCardView(image: Image("chair_\(i+1)"), size: 210)
                                         })
-                                        .navigationBarHidden(true)
                                         .foregroundColor(.black)
                                 }
                                 .padding(.leading)
@@ -66,11 +66,10 @@ struct HomeScreen: View {
                     }
                 }
                 
-                // Menu déroulant
                 if isMenuOpen {
                     HStack {
                         VStack(alignment: .leading) {
-                            NavigationLink(destination: AboutUsView()) { // Redirige vers la page À propos de nous
+                            NavigationLink(destination: AboutUsPageView().navigationBarBackButtonHidden(true)) {
                                 Text("À propos de nous")
                                     .font(.system(size: 20))
                                     .padding(.top, 100)
@@ -94,6 +93,7 @@ struct HomeScreen: View {
                 }
                 
             }
+            .navigationBarBackButtonHidden(true) // Hide back button on HomeScreen
         }
     }
 }
@@ -105,7 +105,8 @@ struct HomeScreen_Previews: PreviewProvider {
 }
 
 struct AppBarView: View {
-    @Binding var isMenuOpen: Bool // Liaison pour le menu
+    @Binding var isMenuOpen: Bool
+    var cartItemCount: Int
     
     var body: some View {
         HStack {
@@ -122,7 +123,6 @@ struct AppBarView: View {
             
             Spacer()
             
-            // Titre entre le menu et la photo de profil
             VStack(spacing: 0) {
                 Text("Le Dressing De Thaïs")
                     .font(.custom("PlayfairDisplay-Bold", size: 25))
@@ -135,11 +135,23 @@ struct AppBarView: View {
             
             Spacer()
             
-            Button(action: {}) {
-                Image(uiImage: #imageLiteral(resourceName: "Profile"))
-                    .resizable()
-                    .frame(width: 42, height: 42)
-                    .cornerRadius(10.0)
+            NavigationLink(destination: FavoritesView().navigationBarBackButtonHidden(true)) {
+                ZStack(alignment: .topTrailing) {
+                    Image(systemName: "star")
+                        .resizable()
+                        .frame(width: 42, height: 42)
+                        .foregroundColor(Color("Primary"))
+                        .cornerRadius(10.0)
+                    
+                    if cartItemCount > 0 {
+                        Text("\(cartItemCount)")
+                            .font(.caption)
+                            .foregroundColor(Color("Primary"))
+                            .padding(6)
+                            .clipShape(Circle())
+                            .offset(x: 4, y: -12)
+                    }
+                }
             }
         }
         .padding(.horizontal)
@@ -160,7 +172,7 @@ struct SearchAndScanView: View {
             .cornerRadius(10.0)
             .padding(.trailing, 8)
             
-            Button(action: {}) { // ici on peut retrouver les articles
+            Button(action: {}) {
                 Image("Search")
                     .padding()
                     .background(Color("Primary"))
@@ -180,9 +192,10 @@ struct CategoryView: View {
                 .font(.system(size: 18))
                 .fontWeight(.medium)
                 .foregroundColor(isActive ? Color("Primary") : Color.black.opacity(0.5))
-            if (isActive) { Color("Primary")
-                .frame(width: 15, height: 2)
-                .clipShape(Capsule())
+            if isActive {
+                Color("Primary")
+                    .frame(width: 15, height: 2)
+                    .clipShape(Capsule())
             }
         }
         .padding(.trailing)
@@ -193,18 +206,32 @@ struct ProductCardView: View {
     let image: Image
     let size: CGFloat
     
+    @State private var isFavorited: Bool = false
+    
     var body: some View {
         VStack {
-            image
-                .resizable()
-                .frame(width: size, height: 200 * (size/210))
-                .cornerRadius(20.0)
-            Text("Luxury Swedian chair").font(.title3).fontWeight(.bold)
-            
-            HStack (spacing: 2) {
-                ForEach(0 ..< 5) { item in
-                    Image("star")
+            ZStack(alignment: .topTrailing) {
+                image
+                    .resizable()
+                    .frame(width: size, height: 200 * (size/210))
+                    .cornerRadius(20.0)
+                
+                Button(action: toggleFavorite) {
+                    Image(systemName: "plus")
+                        .font(.title)
+                        .foregroundColor(.primary)
+                        .padding(8)
                 }
+                .background(Color.white.opacity(0.7))
+                .clipShape(Circle())
+                .padding(8)
+            }
+            
+            Text("Luxury Swedian chair")
+                .font(.title3)
+                .fontWeight(.bold)
+            
+            HStack {
                 Spacer()
                 Text("$1299")
                     .font(.title3)
@@ -215,7 +242,41 @@ struct ProductCardView: View {
         .padding()
         .background(Color.white)
         .cornerRadius(20.0)
-        
+        .onAppear {
+            self.isFavorited = isProductFavorited()
+        }
+    }
+    
+    private func toggleFavorite() {
+        if isFavorited {
+            removeFromFavorites()
+        } else {
+            addToFavorites()
+        }
+        isFavorited.toggle()
+    }
+
+    private func addToFavorites() {
+        var favorites = UserDefaults.standard.stringArray(forKey: "favoriteItems") ?? []
+        let product = "Luxury Swedian chair"
+        if !favorites.contains(product) {
+            favorites.append(product)
+            UserDefaults.standard.set(favorites, forKey: "favoriteItems")
+        }
+    }
+    
+    private func removeFromFavorites() {
+        var favorites = UserDefaults.standard.stringArray(forKey: "favoriteItems") ?? []
+        let product = "Luxury Swedian chair"
+        if let index = favorites.firstIndex(of: product) {
+            favorites.remove(at: index)
+            UserDefaults.standard.set(favorites, forKey: "favoriteItems")
+        }
+    }
+
+    private func isProductFavorited() -> Bool {
+        let favorites = UserDefaults.standard.stringArray(forKey: "favoriteItems") ?? []
+        return favorites.contains("Luxury Swedian chair")
     }
 }
 
@@ -246,10 +307,26 @@ struct BottomNavBarItem: View {
     }
 }
 
-// Nouvelle vue pour "À propos de nous"
 struct AboutUsPageView: View {
+    @Environment(\.presentationMode) var presentationMode // To access the presentation mode for dismissal
+
     var body: some View {
         VStack {
+            HStack {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss() // Dismiss the view
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.title)
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(10.0)
+                        .foregroundColor(.black)
+                }
+                Spacer()
+            }
+            .padding(.horizontal)
+            
             Text("À propos de nous")
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -261,5 +338,6 @@ struct AboutUsPageView: View {
             Spacer()
         }
         .navigationBarTitle("À propos de nous", displayMode: .inline)
+        .navigationBarBackButtonHidden(true) // Hide the default back button
     }
 }

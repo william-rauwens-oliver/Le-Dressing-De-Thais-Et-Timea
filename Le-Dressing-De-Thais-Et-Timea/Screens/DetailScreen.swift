@@ -31,7 +31,7 @@ struct DetailScreen: View {
                     .foregroundColor(.white)
                 Spacer()
                 
-                Text("Add to Cart")
+                Text("Ajouter au Favoris")
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundColor(Color("Primary"))
@@ -96,13 +96,6 @@ struct DescriptionView: View {
                 .fontWeight(.bold)
             //                Rating
             HStack (spacing: 4) {
-                ForEach(0 ..< 5) { item in
-                    Image("star")
-                }
-                Text("(4.9)")
-                    .opacity(0.5)
-                    .padding(.leading, 8)
-                Spacer()
             }
             
             Text("Description")

@@ -1,13 +1,8 @@
-//
-//  AboutUsView.swift
-//  Furniture_app
-//
-//  Created by William on 09/08/2024.
-//
-
 import SwiftUI
 
 struct AboutUsView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             // Header Section
@@ -32,6 +27,8 @@ struct AboutUsView: View {
             Spacer()
         }
         .navigationBarTitle("À propos de nous", displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: BackButton(action: { presentationMode.wrappedValue.dismiss() }))
         .background(Color(UIColor.systemGroupedBackground).edgesIgnoringSafeArea(.all))
     }
 }
