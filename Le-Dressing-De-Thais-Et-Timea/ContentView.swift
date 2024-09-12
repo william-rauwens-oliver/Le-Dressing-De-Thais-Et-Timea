@@ -1,8 +1,8 @@
 //
-//  ContentView.swift
+//  FavoriteItem.swift
 //  Furniture_app
 //
-//  Created by Abu Anwar MD Abdullah on 14/2/21.
+//  Created by William on 10/08/2024.
 //
 
 import SwiftUI
